@@ -11,5 +11,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  onSubmit(data:any){
+      console.log(data);
+  }
 }
