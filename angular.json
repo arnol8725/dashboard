@@ -24,9 +24,10 @@
                         ],
                         "styles": [
                             "src/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
+                            "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                            "node_modules/sweetalert2/dist/sweetalert2.min.css"
                         ],
-                        "scripts": [],
+                        "scripts": ["node_modules/sweetalert2/dist/sweetalert2.min.js"],
                         "es5BrowserSupport": true
                     },
                     "configurations": {
