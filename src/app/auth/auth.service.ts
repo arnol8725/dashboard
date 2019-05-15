@@ -33,7 +33,8 @@ initAuthListener(){
 }
 
   crearUsuario(nombre : string,email : string,password : string){
-   // Swal.showLoading();
+    
+    Swal.showLoading();
         this.afAuth.auth
         .createUserWithEmailAndPassword(email,password)
         .then(resp => {
@@ -43,13 +44,13 @@ initAuthListener(){
               email : resp.user.email,
               nombre : nombre  
           };
-          let cad= resp.user.uid+"/usuario";;
-         // this.afDB.doc(`${ resp.user.uid }/usuario`)
-         this.afDB.doc(cad)
+          //let cad= resp.user.uid+"/usuario";;
+         this.afDB.doc(`${ resp.user.uid }/usuario`)
+        // this.afDB.doc(cad)
           .set( user )
           .then( () => {
             console.error('Entro afDB');
-            //Swal.close();
+            Swal.close();
             this.router.navigate(['/']);
           });
           
