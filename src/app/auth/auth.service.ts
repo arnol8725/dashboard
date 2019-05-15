@@ -8,6 +8,11 @@ import { User } from './user.model';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 
+//ngrx
+import { appReducers, AppState } from '../app.reducer';
+import { Store } from '@ngrx/store';
+import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.actions';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +21,8 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth,
               private router : Router,
-              private afDB: AngularFirestore) { }
+              private afDB: AngularFirestore,
+              public store: Store<AppState>) { }
    mensaje(titulo : string,mensaje : string){
     Swal.fire({
       type: 'error',
@@ -34,7 +40,10 @@ initAuthListener(){
 
   crearUsuario(nombre : string,email : string,password : string){
     
-    Swal.showLoading();
+   // Swal.showLoading();
+    
+    this.store.dispatch(new ActivarLoadingAction());
+
         this.afAuth.auth
         .createUserWithEmailAndPassword(email,password)
         .then(resp => {
@@ -50,8 +59,9 @@ initAuthListener(){
           .set( user )
           .then( () => {
             console.error('Entro afDB');
-            Swal.close();
+            //Swal.close();
             this.router.navigate(['/']);
+            this.store.dispatch(new DesactivarLoadingAction());
           });
           
 
@@ -61,17 +71,19 @@ initAuthListener(){
             console.error(error);
 
             this.mensaje("Error en crear Usuario",error.message);
-           
+            this.store.dispatch(new DesactivarLoadingAction());
             
         });
   }
   login(email : string,password : string){
-    Swal.showLoading();
+    //Swal.showLoading();
+    this.store.dispatch(new ActivarLoadingAction());
     this.afAuth.auth
     .signInWithEmailAndPassword(email,password)
     .then(resp => {
       console.log(resp);
-      Swal.close();
+      //Swal.close();
+        this.store.dispatch(new DesactivarLoadingAction());
       this.router.navigate(['/']);
     })
     .catch( error => {
