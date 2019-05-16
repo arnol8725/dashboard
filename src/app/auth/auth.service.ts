@@ -20,6 +20,8 @@ import { Subscription } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+
+  private user:User;
   
 private userSubscripstion: Subscription = new Subscription();
   constructor(private afAuth: AngularFireAuth,
@@ -35,6 +37,11 @@ private userSubscripstion: Subscription = new Subscription();
     });
    }
 
+
+  getUsuario(){
+    return {...this.user};
+  }
+
 initAuthListener(){
       this.afAuth.authState.subscribe( (fbUser : firebase.User) => {
           console.log(fbUser);
@@ -47,9 +54,11 @@ initAuthListener(){
               const action = new SetUserAction(newUser);
               this.store.dispatch(action);
               console.log(newUser);
+              this.user = newUser;
             });
            
           }else{
+            this.user= null;
             this.userSubscripstion.unsubscribe();
           }
       });
@@ -57,7 +66,7 @@ initAuthListener(){
 
   crearUsuario(nombre : string,email : string,password : string){
     
-   // Swal.showLoading();
+     // Swal.showLoading();
     
     this.store.dispatch(new ActivarLoadingAction());
 
