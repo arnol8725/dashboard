@@ -12,13 +12,16 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { appReducers, AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.actions';
+import { store } from '@angular/core/src/render3';
+import { SetUserAction } from './auth.actions';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   
-
+private userSubscripstion: Subscription = new Subscription();
   constructor(private afAuth: AngularFireAuth,
               private router : Router,
               private afDB: AngularFirestore,
@@ -35,6 +38,20 @@ export class AuthService {
 initAuthListener(){
       this.afAuth.authState.subscribe( (fbUser : firebase.User) => {
           console.log(fbUser);
+          if(fbUser){
+            this.userSubscripstion=this.afDB.doc(`${ fbUser.uid }/usuario`).valueChanges()
+            .subscribe( (usuarioObj:any)  => {
+
+              const newUser = new User( usuarioObj );
+             
+              const action = new SetUserAction(newUser);
+              this.store.dispatch(action);
+              console.log(newUser);
+            });
+           
+          }else{
+            this.userSubscripstion.unsubscribe();
+          }
       });
 }
 
@@ -58,7 +75,7 @@ initAuthListener(){
         // this.afDB.doc(cad)
           .set( user )
           .then( () => {
-            console.error('Entro afDB');
+            //console.error('Entro afDB');
             //Swal.close();
             this.router.navigate(['/']);
             this.store.dispatch(new DesactivarLoadingAction());
