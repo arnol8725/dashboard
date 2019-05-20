@@ -59,6 +59,8 @@ reset(){
   this.tipo="ingreso";
 }
 
+
+
   crearIngresoEgreso(){
 
     this.store.dispatch(new ActivarLoadingAction());

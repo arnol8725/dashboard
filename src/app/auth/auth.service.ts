@@ -112,8 +112,9 @@ initAuthListener(){
         this.store.dispatch(new DesactivarLoadingAction());
       this.router.navigate(['/']);
     })
-    .catch( error => {
+    .catch( error => {   
         console.error(error);
+        this.store.dispatch(new DesactivarLoadingAction());
         this.mensaje("Error en el Login",error.message);
     });
 }
