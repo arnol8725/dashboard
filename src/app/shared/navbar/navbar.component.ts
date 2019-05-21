@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { User } from '../../auth/user.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../app.reducer';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -9,21 +12,19 @@ import { User } from '../../auth/user.model';
 })
 export class NavbarComponent implements OnInit {
 
-  private usuario: User;
+  private usuario: string;
 
-  constructor(private services: AuthService) { }
+  constructor(private services: AuthService,private store : Store<AppState>) { }
 
   ngOnInit() {
-    
+    this.store.select('auth')
+    .pipe(
+      filter( auth => auth.user != null)
+    )
+    .subscribe ( auth => this.usuario=auth.user.nombre);
      
   }
 
-  ngAfterContentChecked(): void {
-    //Called after every check of the component's or directive's content.
-    //Add 'implements AfterContentChecked' to the class.
-    this.usuario = this.services.getUsuario();  
-    console.log('user');
-    console.log(this.usuario.nombre);
-  }
+  
 
 }

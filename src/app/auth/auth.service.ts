@@ -13,8 +13,11 @@ import { appReducers, AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.actions';
 import { store } from '@angular/core/src/render3';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnSetUserAction } from './auth.actions';
 import { Subscription } from 'rxjs';
+import { AuthReducer } from './auth.reducer';
+import { UnSetItemsAction } from '../ingreso-egreso/ingreso-egreso.actions';
+import { IngresoEgresoService } from '../ingreso-egreso/ingreso-egreso.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +28,7 @@ export class AuthService {
   
 private userSubscripstion: Subscription = new Subscription();
   constructor(private afAuth: AngularFireAuth,
+             
               private router : Router,
               private afDB: AngularFirestore,
               public store: Store<AppState>) { }
@@ -121,6 +125,8 @@ initAuthListener(){
 logout(){
   Swal.showLoading();
   this.afAuth.auth.signOut();
+  this.store.dispatch(new UnSetUserAction());
+ 
   this.router.navigate(['/login']);
   Swal.close();   
 }

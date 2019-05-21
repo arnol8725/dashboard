@@ -24,6 +24,9 @@ import { StoreModule } from '@ngrx/store';
 import { appReducers } from './app.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { OrdernIngresoEgresoPipe } from './ingreso-egreso/ordern-ingreso-egreso.pipe';
+
+//Chart graficas
+import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,6 +49,7 @@ import { OrdernIngresoEgresoPipe } from './ingreso-egreso/ordern-ingreso-egreso.
     AngularFireModule.initializeApp(environment.firebase, 'ingreso-egreso-app'),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    ChartsModule,
     StoreModule.forRoot( appReducers ),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

@@ -7,7 +7,7 @@ import { AppState } from '../app.reducer';
 import { filter, map } from 'rxjs/operators';
 import { auth } from 'firebase';
 import { User } from '../auth/user.model';
-import { SetItemsAction } from './ingreso-egreso.actions';
+import { SetItemsAction, UnSetItemsAction } from './ingreso-egreso.actions';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -47,6 +47,7 @@ export class IngresoEgresoService {
   cancelarSubscription(){
     this.ingresoEgresoListenerSubcription.unsubscribe();
     this.ingresoEgresoItemsSubcription.unsubscribe();
+    this.store.dispatch(new UnSetItemsAction());
   }
 
   private ingresoEgresoItems(uid: string){
