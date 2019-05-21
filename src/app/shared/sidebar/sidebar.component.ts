@@ -14,7 +14,7 @@ import { IngresoEgresoService } from '../../ingreso-egreso/ingreso-egreso.servic
   styles: []
 })
 export class SidebarComponent implements OnInit {
-  private usuario: string;
+   usuario: string;
   constructor(private router: AuthService,private store : Store<AppState>,private servicesIngreso: IngresoEgresoService) { }
 
   ngOnInit() {

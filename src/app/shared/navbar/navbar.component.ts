@@ -12,7 +12,7 @@ import { filter } from 'rxjs/operators';
 })
 export class NavbarComponent implements OnInit {
 
-  private usuario: string;
+   usuario: string;
 
   constructor(private services: AuthService,private store : Store<AppState>) { }
 
