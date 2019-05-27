@@ -6,53 +6,62 @@ import { IngresoEgreso } from '../ingreso-egreso.model';
 
 import { MultiDataSet, Label } from 'ng2-charts';
 import { ChartType } from 'chart.js';
+import * as fromIngresoEgreso from '../ingreso-egreso.reducer' ;
 @Component({
   selector: 'app-estadistica',
   templateUrl: './estadistica.component.html',
   styles: []
 })
 export class EstadisticaComponent implements OnInit,OnDestroy {
-  ingresoEgresoDetalle : Subscription = new Subscription();
-  items: IngresoEgreso[] = [];
-  noIngreso : number;
-  noEgreso : number ;
-  totalIngreso : number ;
-  totalEgreso : number ;
+  ingresos: number;
+  egresos: number;
+
+  cuantosIngresos: number;
+  cuantosEgresos: number;
+
+  subscription: Subscription = new Subscription();
+
+  public doughnutChartLabels: string[] = ['Ingresos', 'Egresos'];
+  public doughnutChartData: number[] = [];
   
-  public doughnutChartLabels: Label[] = ['Ingresos', 'Egresos'];
-  public doughnutChartData: MultiDataSet ;
+  
   public doughnutChartType: ChartType = 'doughnut';
-  constructor(private store : Store<AppState>) { }
+  constructor(private store : Store<fromIngresoEgreso.AppState>) { }
 
   ngOnInit() {
-    this.ingresoEgresoDetalle = this.store.select('items')
+    console.log('entro EstadisticaComponent');
+    this.subscription  = this.store.select('ingresoEgreso')  
     .subscribe(result => {
       
-      this.noEgreso=0;
-      this.noIngreso=0;
-      this.totalEgreso=0;
-      this.totalIngreso=0;
-      console.log(result);
-      this.items = result.items;   
-        
+       
+        this.contarIngresoEgreso(result.items)  ;   
 
-      this.items.forEach( item => {
-            if(item.tipo === 'ingreso'){
-                  this.noIngreso += 1;
-                  this.totalIngreso += item.monto;
-            }else{
-                  this.noEgreso += 1;
-                  this.totalEgreso += item.monto;   
-            }
-      });
-
-       this.doughnutChartData = [
-        [this.totalIngreso, this.totalEgreso]
-      ];
       
     });
   }
+  contarIngresoEgreso( items: IngresoEgreso[] ) {
 
+    this.ingresos = 0;
+    this.egresos = 0;
+
+    this.cuantosEgresos = 0;
+    this.cuantosIngresos = 0;
+
+    items.forEach( item => {
+
+      if ( item.tipo === 'ingreso' ) {
+        this.cuantosIngresos ++;
+        this.ingresos += item.monto;
+      } else {
+        this.cuantosEgresos ++;
+        this.egresos += item.monto;  
+      }
+
+    });
+
+    this.doughnutChartData = [ this.ingresos, this.egresos ];
+
+  }
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
     console.log(event, active);
   }
@@ -61,7 +70,7 @@ export class EstadisticaComponent implements OnInit,OnDestroy {
     console.log(event, active);
   }
   ngOnDestroy(){
-    this.ingresoEgresoDetalle.unsubscribe()
+    this.subscription.unsubscribe()
   }
 
 }
